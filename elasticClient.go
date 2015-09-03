@@ -69,18 +69,53 @@ func main() {
 	}
 
 
-    // Add a document to the index
-    tweet := Tweet{User: "olivere", Message: "Take Five"}
-    _, err = client.Index().
-        Index("twitter").
-        Type("tweet").
-        Id("1").
-        BodyJson(tweet).
-        Do()
-    if err != nil {
-        // Handle error
-        panic(err)
-    }
+	// Index a tweet (using JSON serialization)
+	tweet1 := Tweet{User: "olivere", Message: "Take Five", Retweets: 0}
+	put1, err := client.Index().
+		Index("twitter").
+		Type("tweet").
+		Id("1").
+		BodyJson(tweet1).
+		Do()
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+	fmt.Printf("Indexed tweet %s to index %s, type %s\n", put1.Id, put1.Index, put1.Type)
+
+	// Index a second tweet (by string)
+	tweet2 := `{"user" : "olivere", "message" : "It's a Raggy Waltz"}`
+	put2, err := client.Index().
+		Index("twitter").
+		Type("tweet").
+		Id("2").
+		BodyString(tweet2).
+		Do()
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+    fmt.Printf("Indexed tweet %s to index %s, type %s\n", put2.Id, put2.Index, put2.Type)
+
+	// Get tweet with specified ID
+	get1, err := client.Get().
+		Index("twitter").
+		Type("tweet").
+		Id("1").
+		Do()
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+	if get1.Found {
+		fmt.Printf("Got document %s in version %d from index %s, type %s\n", get1.Id, get1.Version, get1.Index, get1.Type)
+	}
+
+	// Flush to make sure the documents got written.
+	_, err = client.Flush().Index("twitter").Do()
+	if err != nil {
+		panic(err)
+	}
 
     // Search with a term query
     termQuery := elastic.NewTermQuery("user", "olivere")
