@@ -30,5 +30,9 @@ Package elastic provides an interface to the Elasticsearch server
 go run main.go
 
 ### View by Web Browser
-1. client side
+1. Our golang API side  - (fetch from database)
 http://localhost:8090/products/6
+
+2. ElasticSearch server side (search from ElasticSearch server)
+http://127.0.0.1:9200/products
+
