@@ -50,13 +50,24 @@ func main() {
 	fmt.Printf("Elasticsearch version %s", esversion)
 
 
+	// Use the IndexExists service to check if a specified index exists.
+	exists, err := client.IndexExists("twitter").Do()
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+	if !exists {
+		// Create a new index.
+		createIndex, err := client.CreateIndex("twitter").Do()
+		if err != nil {
+			// Handle error
+			panic(err)
+		}
+		if !createIndex.Acknowledged {
+			// Not acknowledged
+		}
+	}
 
-    // Create an index
-    _, err = client.CreateIndex("twitter").Do()
-    if err != nil {
-        // Handle error
-        panic(err)
-    }
 
     // Add a document to the index
     tweet := Tweet{User: "olivere", Message: "Take Five"}
