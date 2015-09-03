@@ -1,4 +1,4 @@
-# Review Service API in Golang 
+# Product Service API in Golang 
 
 
 ├── conf  
