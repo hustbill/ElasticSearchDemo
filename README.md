@@ -6,7 +6,11 @@
 ├── controllers  
 │   └── productController.go  
 ├── main.go  
+├── elasticClient.go|
 ├── models  
+├── kafka  
+│   └── consumer.go  
+│   └── producer.go  
 ├── routers  
 │   └── router.go  
 ├── static  
@@ -36,3 +40,6 @@ http://localhost:8090/products/6
 2. ElasticSearch server side (search from ElasticSearch server)  
 http://127.0.0.1:9200/products  
 
+3. ElasticSearch client side (create index / query)  
+go run elasticClient.go  
+source code: https://github.com/hustbill/ElasticSearchDemo/blob/master/elasticClient.go  
