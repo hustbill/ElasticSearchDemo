@@ -6,12 +6,14 @@ import (
     "os"
     
     "../models"
+    "../kafka"
 
     _ "github.com/lib/pq"
 )
 
 
 var products models.Products
+
 
 func GetProductById (db *sql.DB, id string) (*models.Product, error) {
     const query = `SELECT id, name, description, permalink, tax_category_id, shipping_category_id,  is_featured from products
@@ -34,6 +36,11 @@ func RepoFindProduct(id string) models.Product {
         fmt.Fprintf(os.Stdout, "Error:%s\n", err)
     } else {
         fmt.Fprintf(os.Stdout, "Product:%v\n", product)
+        kafka.Producer(models.Product{Name: product.Name, 
+                                        Description: product.Description, 
+                                        Permalink: product.Permalink, 
+                                        IsFeatured: product.IsFeatured, 
+                                        MetaDescription: product.MetaDescription})
         return models.Product{Name: product.Name, Description: product.Description, Permalink: product.Permalink, IsFeatured: product.IsFeatured, MetaDescription: product.MetaDescription}
     }
     // return empty Product if not found

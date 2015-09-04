@@ -3,10 +3,10 @@ package kafka
 import (
 	"fmt"
 	"github.com/Shopify/sarama" 
-	"time"
-    "os/exec"
+   
     "encoding/json"
     "flag"
+    "../models"
 )
 
 var groupName = "trash"
@@ -14,19 +14,10 @@ var topicName = "event"
 var partition int32 = 0
 var client *sarama.Client
 var err error
-var messages = flag.Int("messages", 10000, "Number of messages to send")
-
-type Audit struct {
-  AuditUUID string
-  WhenAudited time.Time
-  WhatURI string
-  WhoURI string
-  WhereURI string
-  WhichChanged string
-}
+var messages = flag.Int("messages", 10, "Number of messages to send")
 
 
-func producer() {
+func Producer(product models.Product) {
 	fmt.Println("creating producer")
      flag.Parse()
     
@@ -49,36 +40,8 @@ func producer() {
     
     // Send Json 
     for i := 1; i <= *messages; i++ {
-       audit_uuid, err := exec.Command("uuidgen").Output()
-       if err != nil {
-         panic(err)
-       }
-
-       what_uri, err := exec.Command("uuidgen").Output()
-       if err != nil {
-         panic(err)
-       }
-
-       who_uri, err := exec.Command("uuidgen").Output()
-       if err != nil {
-         panic(err)
-       }
-
-       where_uri, err := exec.Command("uuidgen").Output()
-       if err != nil {
-         panic(err)
-       }
-
-       which_uri, err := exec.Command("uuidgen").Output()
-       if err != nil {
-         panic(err)
-       }
-
-       when_audited := time.Now()
-
-       m := Audit{AuditUUID: string(audit_uuid), WhenAudited: when_audited, WhatURI: string(what_uri), WhoURI: string(who_uri), WhereURI: string(where_uri), WhichChanged: string(which_uri)}
-
-       b, err := json.Marshal(m)
+     
+       b, err := json.Marshal(product)
   
        msg := &sarama.ProducerMessage{Topic: "test", Value: sarama.StringEncoder(b)}
        producer.SendMessage(msg)
@@ -92,12 +55,7 @@ func producer() {
     
 }
 
-func main() {
 
-	go producer()
-
-	<-make(chan int)
-}
 
 // Reference: 
 // [1].  https://gist.github.com/rayrod2030/8387924
