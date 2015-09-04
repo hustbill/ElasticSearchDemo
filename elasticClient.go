@@ -80,7 +80,7 @@ func main() {
 	put1, err := client.Index().
 		Index("products").
 		Type("product").
-		Id("15").
+		Id("1").
 		BodyJson(product1).
 		Do()
 	if err != nil {
