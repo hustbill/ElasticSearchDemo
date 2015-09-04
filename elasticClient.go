@@ -5,7 +5,7 @@ import (
     "fmt"
     // "log"
     // "os"
-	//"reflect"
+    "reflect"
 	"time"
 
 	"github.com/olivere/elastic"
@@ -76,7 +76,7 @@ func main() {
 
 
 	// Index a product (using JSON serialization)
-	product1 := Product{Name: "LINE CORRECTOR", Description: "A cutting-edge treatment with Hyaluronic Bio-Filling Spheres that swell up to 30 times", TaxCategoryId: 15}
+	product1 := Product{Name: "LINE CORRECTOR", Description: "A cutting-edge treatment with Hyaluronic Bio-Filling Spheres", TaxCategoryId: 15}
 	put1, err := client.Index().
 		Index("products").
 		Type("product").
@@ -131,6 +131,21 @@ func main() {
 
     // TotalHits is another convenience function that works even when something goes wrong.
     fmt.Printf("Found a total of %d products\n", searchResult.TotalHits())
+    
+    
+    // Each is a convenience function that iterates over hits in a search result.
+    	// It makes sure you don't need to check for nil values in the response.
+    	// However, it ignores errors in serialization. If you want full control
+    	// over iterating the hits, see below.
+    	var ttyp Product
+    	for _, item := range searchResult.Each(reflect.TypeOf(ttyp)) {
+    		t := item.(Product)
+    		fmt.Printf("Tweet by %s: %s\n", t.Name, t.Description)
+    	}
+    	// TotalHits is another convenience function that works even when something goes wrong.
+    	fmt.Printf("Found a total of %d tweets\n", searchResult.TotalHits())
+        
+        
 
     // Here's how you iterate through results with full control over each step.
     if searchResult.Hits != nil {
