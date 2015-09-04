@@ -5,14 +5,14 @@ import (
     "fmt"
     // "log"
     // "os"
-    "reflect"
+    // "reflect"
 	"time"
 
 	"github.com/olivere/elastic"
 )
 
 type Product struct {
-    Id                          int64       `json:"id"`
+    //Id                          int64       `json:"id"`
     Name                        string      `json:"name"`
     Description                 string      `json:"description"`
     Permalink                   string      `json:"permalink"`
@@ -76,7 +76,7 @@ func main() {
 
 
 	// Index a product (using JSON serialization)
-	product1 := Product{Name: "CORRECTOR", Description: "cutting-edge-treatment", TaxCategoryId: 15}
+	product1 := Product{Name: "annual_fee", Description: "cutting-edge-treatment", TaxCategoryId: 15}
 	put1, err := client.Index().
 		Index("products").
 		Type("product").
@@ -90,7 +90,7 @@ func main() {
 	fmt.Printf("Indexed product %s to index %s, type %s\n", put1.Id, put1.Index, put1.Type)
 
     // Index a second product (by string)
-    	product2 := `{"name" : "CORRECTOR", "description" : "It's a good one"}`
+    	product2 := `{"name" : "annual_fee", "description" : "It's a good one"}`
     	put2, err := client.Index().
     		Index("products").
     		Type("product").
@@ -115,6 +115,7 @@ func main() {
 	}
 	if get1.Found {
 		fmt.Printf("Got document %s in version %d from index %s, type %s\n", get1.Id, get1.Version, get1.Index, get1.Type)
+
 	}
 
 	// Flush to make sure the documents got written.
@@ -124,7 +125,7 @@ func main() {
 	}
 
     // Search with a term query
-    termQuery := elastic.NewTermQuery("name", "CORRECTOR")
+    termQuery := elastic.NewTermQuery("name", "annual_fee")
     searchResult, err := client.Search().
         Index("products").   // search in index "products"
         Query(&termQuery).  // specify the query
@@ -145,20 +146,6 @@ func main() {
     // TotalHits is another convenience function that works even when something goes wrong.
     fmt.Printf("Found a total of %d products\n", searchResult.TotalHits())
     
-    
-    // Each is a convenience function that iterates over hits in a search result.
-    	// It makes sure you don't need to check for nil values in the response.
-    	// However, it ignores errors in serialization. If you want full control
-    	// over iterating the hits, see below.
-    	var ttyp Product
-    	for _, item := range searchResult.Each(reflect.TypeOf(ttyp)) {
-    		t := item.(Product)
-    		fmt.Printf("Tweet by %s: %s\n", t.Name, t.Description)
-    	}
-    	// TotalHits is another convenience function that works even when something goes wrong.
-    	fmt.Printf("Found a total of %d tweets\n", searchResult.TotalHits())
-        
-        
 
     // Here's how you iterate through results with full control over each step.
     if searchResult.Hits != nil {
