@@ -76,11 +76,11 @@ func main() {
 
 
 	// Index a product (using JSON serialization)
-	product1 := Product{Name: "LINE CORRECTOR", Description: "A cutting-edge treatment with Hyaluronic Bio-Filling Spheres that swell up to 30 times in ", TaxCategoryId: 15}
+	product1 := Product{Name: "LINE CORRECTOR", Description: "A cutting-edge treatment with Hyaluronic Bio-Filling Spheres that swell up to 30 times", TaxCategoryId: 15}
 	put1, err := client.Index().
 		Index("products").
 		Type("product").
-		Id("1").
+		Id("15").
 		BodyJson(product1).
 		Do()
 	if err != nil {
