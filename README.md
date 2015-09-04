@@ -6,17 +6,15 @@
 ├── controllers  
 │   └── productController.go  
 ├── main.go  
-├── elasticClient.go|
+├── elasticClient.go  
 ├── models  
+│   └── product.go  
 ├── kafka  
 │   └── consumer.go  
 │   └── producer.go  
 ├── routers  
 │   └── router.go  
-├── static  
-│   ├── css  
-│   ├── img  
-│   └── js  
+│   └── routes.go  
 ├── tests  
 │   └── default_test.go  
 └── views  
