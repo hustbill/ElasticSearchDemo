@@ -124,7 +124,7 @@ func main() {
 	}
 
     // Search with a term query
-    termQuery := elastic.NewTermQuery("name", "CORRECTOR")
+    termQuery := elastic.NewTermQuery("name", "LINE CORRECTOR")
     searchResult, err := client.Search().
         Index("products").   // search in index "products"
         Query(&termQuery).  // specify the query
