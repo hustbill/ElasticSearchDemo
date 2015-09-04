@@ -76,7 +76,7 @@ func main() {
 
 
 	// Index a product (using JSON serialization)
-	product1 := Product{Name: "LINE CORRECTOR", Description: "cutting-edge-treatment", TaxCategoryId: 15}
+	product1 := Product{Name: "CORRECTOR", Description: "cutting-edge-treatment", TaxCategoryId: 15}
 	put1, err := client.Index().
 		Index("products").
 		Type("product").
@@ -90,7 +90,7 @@ func main() {
 	fmt.Printf("Indexed product %s to index %s, type %s\n", put1.Id, put1.Index, put1.Type)
 
     // Index a second product (by string)
-    	product2 := `{"name" : " CORRECTOR brush", "description" : "It's a good one"}`
+    	product2 := `{"name" : "CORRECTOR", "description" : "It's a good one"}`
     	put2, err := client.Index().
     		Index("products").
     		Type("product").
@@ -124,7 +124,7 @@ func main() {
 	}
 
     // Search with a term query
-    termQuery := elastic.NewTermQuery("name", "LINE CORRECTOR")
+    termQuery := elastic.NewTermQuery("name", "CORRECTOR")
     searchResult, err := client.Search().
         Index("products").   // search in index "products"
         Query(&termQuery).  // specify the query
