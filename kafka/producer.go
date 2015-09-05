@@ -43,7 +43,7 @@ func Producer(product models.Product) {
      
        b, err := json.Marshal(product)
   
-       msg := &sarama.ProducerMessage{Topic: "test", Value: sarama.StringEncoder(b)}
+       msg := &sarama.ProducerMessage{Topic: "product", Value: sarama.StringEncoder(b)}
        producer.SendMessage(msg)
        fmt.Println("Producer send message to Kafka server")
        

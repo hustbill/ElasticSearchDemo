@@ -7,8 +7,9 @@ import (
     // "os"
     // "reflect"
 	"time"
-
-	"github.com/olivere/elastic"
+    "github.com/olivere/elastic"
+    
+    "./kafka"
 )
 
 type Product struct {
@@ -29,6 +30,8 @@ type Product struct {
 
 
 func main() {
+    
+    go kafka.Consumer()
 
 	// Create a client and connect to http://192.1.199.81:9200
 	// client, err := elastic.NewClient(elastic.SetURL("http://192.1.199.81:9200"))
