@@ -2,4 +2,4 @@ language: go
 
 install: make get-deps
 
-'sudo: required'
+sudo: required
