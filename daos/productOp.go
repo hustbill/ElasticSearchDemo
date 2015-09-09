@@ -4,6 +4,7 @@ import (
     "database/sql"
     "fmt"
     "os"
+    "log"
     
     "../models"
     "../kafka"
@@ -45,6 +46,53 @@ func RepoFindProduct(id string) models.Product {
     }
     // return empty Product if not found
     return models.Product{}
+}
+
+func RepoCreateProduct(p models.Product)  models.Product {
+    log.Println("# Insert a product")
+    dbInfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", DB_USER, DB_PASSWORD, DB_NAME) 
+    db, err := sql.Open("postgres", dbInfo)
+    checkErr(err)
+    defer db.Close()
+    
+    var lastInsertId int64
+    err = db.QueryRow(`INSERT INTO products (
+        name,
+        description,
+        permalink,
+        tax_category_id,
+        shipping_category_id,
+        deleted_at,
+        meta_description,
+        meta_keywords,
+        position,
+        is_featured,
+        can_discount,
+        distributor_only_membership
+        ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+     returning id;`,  
+         p.Name,                     
+         p.Description,              
+         p.Permalink,                
+         p.TaxCategoryId,
+         p.ShippingCategoryId,
+         p.DeletedAt,      
+         p.MetaDescription,
+         p.MetaKeywords,         
+         p.Position,            
+         p.IsFeatured,     
+         p.CanDiscount,              
+         p.DistributorOnlyMembership).Scan(&lastInsertId)
+    
+    log.Println("last inserted id = ", lastInsertId)
+    kafka.Producer(models.Product{Name: p.Name, 
+                                    Description: p.Description, 
+                                    Permalink: p.Permalink, 
+                                    IsFeatured: p.IsFeatured, 
+                                    MetaDescription: p.MetaDescription})
+    
+    p.Id = lastInsertId
+    return p
 }
 
 

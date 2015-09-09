@@ -6,6 +6,8 @@ import (
     "flag"
 
     "time"
+    "io"
+    "io/ioutil"
     
 	"fmt"
 	"net/http"
@@ -97,20 +99,10 @@ func ProductIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProductShow(w http.ResponseWriter, r *http.Request) {
-    getReqCounter.Inc()
-    
     vars := mux.Vars(r)
     var name string
-
-    
-    //if reviewId, err = strconv.Atoi(vars["reviewId"]); err != nil {
-    // if reviewId, err = strconv.ParseInt(vars["reviewId"], 0,64); err != nil {
-    // if name == vars["Name"] {
-  //       panic(err)
-  //   }
-
-  name = vars["name"]
-      fmt.Println(name)
+    name = vars["name"]
+    fmt.Println(name)
     product := daos.RepoFindProduct(name)
     fmt.Println(product)
     fmt.Println(product.Name)
@@ -127,8 +119,36 @@ func ProductShow(w http.ResponseWriter, r *http.Request) {
 	// If we didn't find it, 404
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusNotFound)
-	// if err := json.NewEncoder(w).Encode(jsonErr{Code: http.StatusNotFound, Text: "Not Found"}); err != nil {
-//         panic(err)
-//     }
+    // if err := json.NewEncoder(w).Encode(jsonErr{Code: http.StatusNotFound, Text: "Not Found"}); err != nil {
+   //      panic(err)
+   //  }
 }
 
+
+func ProductCreate(w http.ResponseWriter, r *http.Request) {
+    var product models.Product
+    body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048567))
+    
+    if err != nil {
+        panic(err)
+    }
+    
+    if err := r.Body.Close(); err != nil {
+        panic(err)
+    }
+    
+    if err := json.Unmarshal(body, &product); err != nil {
+        w.Header().Set("Context-Type", "application/json;charset=UTF-8")
+        w.WriteHeader(422)
+        if err := json.NewEncoder(w).Encode(err); err!= nil {
+            panic(err)
+        }
+    }
+    
+    p := daos.RepoCreateProduct(product)
+    w.Header().Set("Context-Type", "application/json;charset=UTF-8")
+    w.WriteHeader(http.StatusCreated)
+    if err := json.NewEncoder(w).Encode(p); err != nil {
+        panic(err)
+    }
+}

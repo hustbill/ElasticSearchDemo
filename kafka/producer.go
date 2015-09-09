@@ -51,9 +51,15 @@ func Producer(product models.Product) {
          panic(err)
        }
    }
-   
+}
+
+
+// bactch merge the data from db to elasticSearch
+func batchMergeDb() {
+    
     
 }
+
 
 
 

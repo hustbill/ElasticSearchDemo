@@ -35,5 +35,11 @@ var routes = Routes{
         "/products/{name}",
         handlers.ProductShow,
     },
+    Route{
+        "ProductCreate",
+        "POST",
+        "/products",
+        handlers.ProductCreate,
+    },
 }
 
