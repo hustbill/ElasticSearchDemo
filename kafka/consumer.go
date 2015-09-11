@@ -25,7 +25,7 @@ func init() {
 	sarama.Logger = log.New(os.Stdout, "[Sarama] ", log.LstdFlags)
 }
 
-func Consumer() {
+func Consumer(offset int64) string {
     log.Println("create consumer")
     flag.Parse()
     
@@ -49,17 +49,18 @@ func Consumer() {
     if err != nil {
         panic(err)
     }
-    log.Println(partitions[0])
+    length := len(partitions)
+    log.Println("length=", length)
     
-    pc, err := consumer.ConsumePartition(topics[0], partitions[0], 0)
+    pc, err := consumer.ConsumePartition(topics[0], partitions[0], offset)
     if err != nil {
         panic(err)
     }
     
     test0_msg := <-pc.Messages()
-    log.Println(string(test0_msg.Value))
+    //log.Println(string(test0_msg.Value))
+    return string(test0_msg.Value)
 }
-
 
 // Reference :
 // [1].  https://github.com/wvanbergen/kafka/blob/master/examples/consumergroup/main.go

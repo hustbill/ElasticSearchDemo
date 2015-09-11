@@ -37,11 +37,11 @@ func RepoFindProduct(id string) models.Product {
         fmt.Fprintf(os.Stdout, "Error:%s\n", err)
     } else {
         fmt.Fprintf(os.Stdout, "Product:%v\n", product)
-        kafka.Producer(models.Product{Name: product.Name, 
-                                        Description: product.Description, 
-                                        Permalink: product.Permalink, 
-                                        IsFeatured: product.IsFeatured, 
-                                        MetaDescription: product.MetaDescription})
+        // kafka.Producer(models.Product{Name: product.Name,
+     //                                    Description: product.Description,
+     //                                    Permalink: product.Permalink,
+     //                                    IsFeatured: product.IsFeatured,
+     //                                    MetaDescription: product.MetaDescription})
         return models.Product{Name: product.Name, Description: product.Description, Permalink: product.Permalink, IsFeatured: product.IsFeatured, MetaDescription: product.MetaDescription}
     }
     // return empty Product if not found
@@ -85,13 +85,13 @@ func RepoCreateProduct(p models.Product)  models.Product {
          p.DistributorOnlyMembership).Scan(&lastInsertId)
     
     log.Println("last inserted id = ", lastInsertId)
-    kafka.Producer(models.Product{Name: p.Name, 
+    p.Id = lastInsertId
+    kafka.Producer(models.Product{  Id: p.Id,    
+                                    Name: p.Name, 
                                     Description: p.Description, 
                                     Permalink: p.Permalink, 
                                     IsFeatured: p.IsFeatured, 
                                     MetaDescription: p.MetaDescription})
-    
-    p.Id = lastInsertId
     return p
 }
 

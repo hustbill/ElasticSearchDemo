@@ -2,11 +2,13 @@ package kafka
 
 import (
 	"fmt"
-	"github.com/Shopify/sarama" 
-   
-    "encoding/json"
+	"encoding/json"
     "flag"
+    "log"
+    
     "../models"
+    
+    "github.com/Shopify/sarama" 
 )
 
 var groupName = "trash"
@@ -39,18 +41,19 @@ func Producer(product models.Product) {
     }*/
     
     // Send Json 
-    for i := 1; i <= *messages; i++ {
+    //for i := 1; i <= *messages; i++ {
      
        b, err := json.Marshal(product)
   
-       msg := &sarama.ProducerMessage{Topic: "product", Value: sarama.StringEncoder(b)}
+       msg := &sarama.ProducerMessage{Topic: "product2", Value: sarama.StringEncoder(b)}
        producer.SendMessage(msg)
-       fmt.Println("Producer send message to Kafka server")
+       log.Println("Producer send message to Kafka server")
+       log.Println(msg)
        
        if err != nil {
          panic(err)
        }
-   }
+       //}
 }
 
 
