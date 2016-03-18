@@ -23,8 +23,7 @@
 ##Product Info Demo
   When we insert a new product into products table,  our client code will publish the database insert event to Kafka server,
   a consumer can listen on this event, and  then update the data into elastic search server via  elastic go library.
-  
- (https://github.com/hustbill/ElasticSearchDemo/blob/master/ElasticSearch_Kafka_Postgres_in_order.png)
+  ![](https://github.com/hustbill/ElasticSearchDemo/blob/master/ElasticSearch_Kafka_Postgres_in_order.png " Integrate ElasticSearch and Kafka in Product service")
 
 1. batch migrate data from database to ElasticSearch  
 We use Postgres SQL database: medicus_dev, pull data from products table in medicus_dev database to ElasticSearch server
